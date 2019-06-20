@@ -110,7 +110,7 @@ function makeSession(current) {
             joinTime: Date.now(),
             leaveTime: null,
             member: current.id,
-            channel: current.channelID
+            channel: current.voice.channelID
         }, (err, doc) => {
                 if (err) {
                     return reject(err);
@@ -164,10 +164,10 @@ client.on('voiceStateUpdate', (old, current) => {
         if (old.channelID) {
             sessions[current.id].then(_id => {
                 db.update({_id}, { $set: { leaveTime: Date.now() } });
-            })
+            });
         }
         if (current.channelID) {
-            sessions[current.id] = makeSession(current);
+            sessions[current.id] = makeSession(current.member);
         }
     }
 });
